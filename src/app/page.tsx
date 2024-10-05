@@ -10,7 +10,7 @@ const starsData = [
   { x: 100, y: 50, z: -200, name: 'Alpha', description: 'A bright star in the sky' },
   { x: -150, y: 75, z: -300, name: 'Beta', description: 'A distant star' },
   { x: 200, y: -100, z: -500, name: 'Gamma', description: 'A star on the edge of the galaxy' },
-  // Más estrellas
+  // ...
 ];
 
 const StarMap: React.FC = () => {
