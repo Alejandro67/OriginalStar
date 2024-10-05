@@ -2,7 +2,7 @@
 import React, { useEffect, useRef, useState } from "react";
 import p5 from "p5";
 import { getStars } from "@/actions/getStars";
-import { raDecToCartesian } from "./utils/raDecToCartesian";
+import { raDecToCartesian } from "../utils/raDecToCartesian";
 
 // JSON de ejemplo con las estrellas (x, y, z, name, description)
 const starsData = [
@@ -26,21 +26,16 @@ const starsData = [
 
 const StarMap: React.FC = () => {
   const sketchRef = useRef<HTMLDivElement>(null);
-  const [clickedStar, setClickedStar] = useState<{
-    name: string;
-    description: string;
-  } | null>(null);
-  const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 });
   const [newStars, setStars] = useState<any[]>([]);
 
   useEffect(() => {
     const loadStars = async () => {
       try {
-        let xd2 = raDecToCartesian(2185.17879166666665,17.79325277777778, 93.1846*30)
         const stars:any[] = await getStars(0);
         const stars2:any[] = await getStars(180)
         const fullstars = stars.concat(stars2)
         console.log(stars[0]);
+        let xd2 = raDecToCartesian(352.8241667,39.2358361,75.4392*20)
 
         // const exoplanetCoordinates = raDecToCartesian(0, 0, 0);
         // console.log(exoplanetCoordinates);
@@ -53,15 +48,15 @@ const StarMap: React.FC = () => {
           const starCoordinates = raDecToCartesian(
             star[2],
             star[3],
-            star[23] *30
-            // distance * 30
+            // star[23]
+            distance * 20
           );
           //console.log(starCoordinates);
           Math.PI;
           const adjustedStarCoords = {
-            x: starCoordinates.x -xd2.x,
-            y: starCoordinates.y - xd2.y,
-            z: starCoordinates.z - xd2.z,
+            x: starCoordinates.x ,
+            y: starCoordinates.y,
+            z: starCoordinates.z,
           };
 
           return adjustedStarCoords;
@@ -87,32 +82,33 @@ const StarMap: React.FC = () => {
       p.setup = () => {
         p.createCanvas(window.innerWidth, window.innerHeight, p.WEBGL);
         stars = newStars; // Cargar las estrellas del JSON
-        let xd2 = raDecToCartesian(242.6020833, 43.8163611,17.9323*50)
+        let xd2 = raDecToCartesian(352.8241667,39.2358361,75.4392*20)
 
         const initialX = xd2.x;
         const initialY = xd2.y;
         const initialZ = xd2.z;
         
         // La cámara se posiciona en (initialX, initialY, initialZ) y mira hacia el origen (0, 0, 0)
-        p.camera(1,1,1, 0, 0, 0, 0, 1, 0);
+        p.camera(initialX, initialY, initialZ, 0, 0, 0, 0, 1, 0);
       };
 
       p.draw = () => {
-        let xd2 = raDecToCartesian(2185.17879166666665,17.79325277777778, 93.1846*30)
+        let xd = raDecToCartesian(185.17879166666665,17.79325277777778, 93.1846*20)
+        let xd2 = raDecToCartesian(352.8241667,39.2358361,75.4392*20)
         p.background(0);
         const initialX = xd2.x;
         const initialY = xd2.y;
         const initialZ = xd2.z;
         p.strokeWeight(10)
         p.stroke(255,0,0)
-        p.point(0,0,0)
-        p.point(-xd2.x, -xd2.y, -xd2.z)
+        p.point(xd.x, xd.y, xd.z)
+        p.point(xd2.x, xd2.y, xd2.z)
 
         // Dibujar ejes
         p.strokeWeight(2);
 
-        //p.translate(-initialX, -initialY, -initialZ);
-        p.orbitControl(1, 1, 0);  
+        p.translate(-initialX, -initialY, -initialZ);
+        p.orbitControl();
 
         // Eje X - Rojo
         p.stroke(255, 0, 0); // Color rojo para el eje X
@@ -150,6 +146,7 @@ const StarMap: React.FC = () => {
           // } else {
           //   p.fill(255);
           // }
+
           p.sphere(0.1); // Dibujar una pequeña esfera para la estrella
           p.pop();
         });
