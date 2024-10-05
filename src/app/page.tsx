@@ -20,7 +20,7 @@ const starsData = [
     name: "Gamma",
     description: "A star on the edge of the galaxy",
   },
-  // Más estrellas
+  // ...
 ];
 
 const StarMap: React.FC = () => {
