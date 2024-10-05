@@ -2,6 +2,7 @@
 import React, { useEffect, useRef, useState } from "react";
 import p5 from "p5";
 import { getStars } from "@/actions/getStars";
+import { raDecToCartesian } from "./utils/raDecToCartesian";
 
 // JSON de ejemplo con las estrellas (x, y, z, name, description)
 const starsData = [
@@ -37,15 +38,20 @@ const StarMap: React.FC = () => {
       try {
         const stars = await getStars();
         console.log(stars[0]);
+        const exoplanetCoordinates = raDecToCartesian(
+          185.17879166666665,
+          17.79325277777778,
+          93.1846
+        );
         const formatedStarts = stars.map((star) => {
-          const raRad = (185.17879166666665 * Math.PI) / 180;
-          const decRad = (17.79325277777778 * Math.PI) / 180;
-          const distance = star[23];
+          const starCoordinates = raDecToCartesian(star[2], star[3], star[23]);
+          const adjustedStarCoords = {
+            x: starCoordinates.x - exoplanetCoordinates.x,
+            y: starCoordinates.y - exoplanetCoordinates.y,
+            z: starCoordinates.z - exoplanetCoordinates.z,
+          };
 
-          const x = distance * Math.cos(decRad) * Math.cos(raRad);
-          const y = distance * Math.cos(decRad) * Math.sin(raRad);
-          const z = distance * Math.sin(decRad);
-          return { x, y, z };
+          return adjustedStarCoords;
         });
         console.log(formatedStarts);
         setStars(formatedStarts);
@@ -74,13 +80,29 @@ const StarMap: React.FC = () => {
         p.background(0);
         p.orbitControl();
 
+        // Dibujar ejes
+        p.strokeWeight(2);
+
+        // Eje X - Rojo
+        p.stroke(255, 0, 0); // Color rojo para el eje X
+        p.line(-10000, 0, 0, 10000, 0, 0); // Línea del eje X
+
+        // Eje Y - Verde
+        p.stroke(0, 255, 0); // Color verde para el eje Y
+        p.line(0, -10000, 0, 0, 10000, 0); // Línea del eje Y
+
+        // Eje Z - Azul
+        p.stroke(0, 0, 255); // Color azul para el eje Z
+        p.line(0, 0, -10000, 0, 0, 10000); // Línea del eje Z
+
         // Dibujar estrellas
         p.stroke(255);
         p.fill(255);
 
         stars.forEach((star) => {
-          p.translate(star.x, star.y, star.z);
           p.push();
+
+          p.translate(star.x, star.y, star.z);
 
           // const d = p.dist(
           //   p.mouseX - p.width / 2,
@@ -98,7 +120,7 @@ const StarMap: React.FC = () => {
           //   p.fill(255);
           // }
 
-          p.sphere(100); // Dibujar una pequeña esfera para la estrella
+          p.sphere(1); // Dibujar una pequeña esfera para la estrella
           p.pop();
         });
       };
