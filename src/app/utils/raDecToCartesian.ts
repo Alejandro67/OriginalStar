@@ -5,5 +5,6 @@ export function raDecToCartesian(ra: number, dec: number, distance: number) {
   const x = distance * Math.cos(decRad) * Math.cos(raRad);
   const y = distance * Math.cos(decRad) * Math.sin(raRad);
   const z = distance * Math.sin(decRad);
+
   return { x, y, z };
 }

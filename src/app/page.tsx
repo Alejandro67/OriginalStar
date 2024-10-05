@@ -38,17 +38,26 @@ const StarMap: React.FC = () => {
       try {
         const stars = await getStars();
         console.log(stars[0]);
-        const exoplanetCoordinates = raDecToCartesian(
-          185.17879166666665,
-          17.79325277777778,
-          93.1846
-        );
+        const exoplanetCoordinates = raDecToCartesian(0, 0, 0);
+        console.log(exoplanetCoordinates);
         const formatedStarts = stars.map((star) => {
-          const starCoordinates = raDecToCartesian(star[2], star[3], star[23]);
+          let parallaxInArcsec = star[4] / 1000; // Convertir a segundos de arco
+          let distance = parallaxInArcsec > 0 ? 1 / parallaxInArcsec : Infinity;
+
+          // distance *= 3.26; // Convertir parsecs a años luz (opcional)
+
+          const starCoordinates = raDecToCartesian(
+            star[2],
+            star[3],
+            // star[23]
+            distance * 10
+          );
+          console.log(starCoordinates);
+          Math.PI;
           const adjustedStarCoords = {
-            x: starCoordinates.x - exoplanetCoordinates.x,
-            y: starCoordinates.y - exoplanetCoordinates.y,
-            z: starCoordinates.z - exoplanetCoordinates.z,
+            x: starCoordinates.x,
+            y: starCoordinates.y,
+            z: starCoordinates.z,
           };
 
           return adjustedStarCoords;
@@ -101,7 +110,6 @@ const StarMap: React.FC = () => {
 
         stars.forEach((star) => {
           p.push();
-
           p.translate(star.x, star.y, star.z);
 
           // const d = p.dist(
@@ -120,7 +128,7 @@ const StarMap: React.FC = () => {
           //   p.fill(255);
           // }
 
-          p.sphere(1); // Dibujar una pequeña esfera para la estrella
+          p.sphere(0.1); // Dibujar una pequeña esfera para la estrella
           p.pop();
         });
       };
