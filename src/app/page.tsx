@@ -1,95 +1,117 @@
+"use client"
 import Image from "next/image";
 import styles from "./page.module.css";
 
-export default function Home() {
-  return (
-    <div className={styles.page}>
-      <main className={styles.main}>
-        <Image
-          className={styles.logo}
-          src="https://nextjs.org/icons/next.svg"
-          alt="Next.js logo"
-          width={180}
-          height={38}
-          priority
-        />
-        <ol>
-          <li>
-            Get started by editing <code>src/app/page.tsx</code>.
-          </li>
-          <li>Save and see your changes instantly.</li>
-        </ol>
+import React, { useEffect, useRef, useState } from 'react';
+import p5 from 'p5';
 
-        <div className={styles.ctas}>
-          <a
-            className={styles.primary}
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Image
-              className={styles.logo}
-              src="https://nextjs.org/icons/vercel.svg"
-              alt="Vercel logomark"
-              width={20}
-              height={20}
-            />
-            Deploy now
-          </a>
-          <a
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-            className={styles.secondary}
-          >
-            Read our docs
-          </a>
+// JSON de ejemplo con las estrellas (x, y, z, name, description)
+const starsData = [
+  { x: 100, y: 50, z: -200, name: 'Alpha', description: 'A bright star in the sky' },
+  { x: -150, y: 75, z: -300, name: 'Beta', description: 'A distant star' },
+  { x: 200, y: -100, z: -500, name: 'Gamma', description: 'A star on the edge of the galaxy' },
+  // Más estrellas
+];
+
+const StarMap: React.FC = () => {
+  const sketchRef = useRef<HTMLDivElement>(null);
+  const [clickedStar, setClickedStar] = useState<{ name: string; description: string } | null>(null);
+  const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 });
+
+  useEffect(() => {
+    const sketch = (p: p5) => {
+      let stars: { x: number; y: number; z: number; name: string; description: string }[] = [];
+
+      p.setup = () => {
+        p.createCanvas(window.innerWidth, window.innerHeight, p.WEBGL);
+        stars = starsData; // Cargar las estrellas del JSON
+      };
+
+      p.draw = () => {
+        p.background(0);
+        p.orbitControl();
+
+        // Dibujar estrellas
+        p.stroke(255);
+        p.fill(255);
+
+        stars.forEach((star) => {
+          p.push();
+          p.translate(star.x, star.y, star.z);
+
+          const d = p.dist(p.mouseX - p.width / 2, p.mouseY - p.height / 2, 0, star.x, star.y, star.z); // Distancia del mouse
+
+          if (d < 10) { // Si el mouse está cerca de la estrella, cambiar su color
+            p.fill(255, 0, 0);
+          } else {
+            p.fill(255);
+          }
+
+          p.sphere(5); // Dibujar una pequeña esfera para la estrella
+          p.pop();
+        });
+      };
+
+      p.mousePressed = () => {
+        let foundStar: { name: string; description: string } | null = null;
+
+        stars.forEach((star) => {
+          const d = p.dist(p.mouseX, p.mouseY, 0, star.x, star.y, 0);
+
+          if (d < 200) { // Si el click está cerca de una estrella
+            foundStar = { name: star.name, description: star.description };
+          }
+        });
+
+        if (foundStar) {
+          setClickedStar(foundStar);
+          setMousePosition({ x: p.mouseX, y: p.mouseY });
+        } else {
+          setClickedStar(null); // Si no hay estrella clickeada, ocultar la card
+        }
+      };
+    };
+    
+    const myP5 = new p5(sketch, sketchRef.current!);
+
+    return () => {
+      myP5.remove();
+    };
+  }, []);
+
+  return (
+    <div>
+      <div ref={sketchRef}></div>
+
+      {/* Renderizar la card con la información de la estrella clickeada */}
+      {clickedStar && (
+        <div
+          style={{
+            position: 'absolute',
+            left: `${mousePosition.x + 20}px`,
+            top: `${mousePosition.y + 20}px`,
+            backgroundColor: 'rgba(0, 0, 0, 0.8)',
+            color: 'white',
+            padding: '10px',
+            borderRadius: '5px',
+            pointerEvents: 'none', // La card no interfiere con los clicks
+          }}
+        >
+          <h3>{clickedStar.name}</h3>
+          <p>{clickedStar.description}</p>
         </div>
-      </main>
-      <footer className={styles.footer}>
-        <a
-          href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="https://nextjs.org/icons/file.svg"
-            alt="File icon"
-            width={16}
-            height={16}
-          />
-          Learn
-        </a>
-        <a
-          href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="https://nextjs.org/icons/window.svg"
-            alt="Window icon"
-            width={16}
-            height={16}
-          />
-          Examples
-        </a>
-        <a
-          href="https://nextjs.org?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="https://nextjs.org/icons/globe.svg"
-            alt="Globe icon"
-            width={16}
-            height={16}
-          />
-          Go to nextjs.org →
-        </a>
-      </footer>
+      )}
     </div>
   );
-}
+};
+
+export default StarMap;
+
+// export default function Home() {
+
+//   return (
+//     <div className={styles.page}>
+      
+//     </div>
+//   );
+// }
