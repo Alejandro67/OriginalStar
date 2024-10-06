@@ -27,7 +27,7 @@ export async function GET(request: NextRequest) {
     }
   } catch (e: any) {
     console.log(e);
-    if (e.response.data) {
+    if (e.response?.data) {
       return NextResponse.json(
         { error: e.response.data.message },
         { status: e.status }
