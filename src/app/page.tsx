@@ -24,7 +24,7 @@ export default function Home() {
   };
 
   return (
-    <Flex direction={"column"} bg={"#232427"} h={"auto"}>
+    <Flex direction={"column"} bg={"#232427"} h="100vh">
       <Flex justify={"center"} pb={5} textAlign="center">
         <Box
           bgImage={Banner.src}
@@ -48,12 +48,18 @@ export default function Home() {
         </Box>
       </Flex>
 
-      <Flex w={"100%"} direction={"column"}>
+      <Flex w={"100%"} direction={"column"} align="center">
         <Heading textAlign={"center"} color={"white"} fontSize={25}>
           Select one of the following Exoplanet to visualize the sky from their
           point of view
         </Heading>
-        <Flex w={"95%"} m={"2%"} gap={5} justify={"space-between"}>
+        <Flex
+          align="center"
+          w={"100%"}
+          m={"2%"}
+          gap={5}
+          justify={"space-between"}
+        >
           <SimpleGrid columns={{ base: 3, md: 2, lg: 5 }} spacing={3} p={5}>
             {exoplanets.map((planet) => (
               <Box
