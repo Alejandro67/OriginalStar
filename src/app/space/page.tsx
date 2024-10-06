@@ -6,6 +6,7 @@ import { raDecToCartesian } from "../utils/raDecToCartesian";
 import { calculateStarSize } from "../utils/calculateStarSize";
 import { useSearchParams } from "next/navigation";
 import { exoplanets } from "@/exoplanets";
+import { COLOR_SCALE, getStarColor } from "../utils/getStarColor";
 
 // JSON de ejemplo con las estrellas (x, y, z, name, description)
 const starsData = [
@@ -38,30 +39,17 @@ const StarMap: React.FC = () => {
   const searchParams = useSearchParams();
   const exoplanetName = searchParams.get("exoplanet");
   const exoplanet = exoplanets.find((exo) => exo.name === exoplanetName) || {
+    name: "Earth",
     raDeg: 0,
     decDeg: 0,
     d: 0,
   };
-
+  const [p5Instance, setP5Instance] = useState<p5>();
   const exoplanetCoordinates = raDecToCartesian(
     exoplanet.raDeg,
     exoplanet.decDeg,
-    exoplanet.d * 30
+    exoplanet.d * 25
   );
-
-  function getStarColor(teff_gspphot: number) {
-    if (teff_gspphot < 3500) {
-      return [255, 0, 0]; // Estrella fría
-    } else if (teff_gspphot >= 3500 && teff_gspphot < 5000) {
-      return [255, 165, 0]; // Estrella algo fría
-    } else if (teff_gspphot >= 5000 && teff_gspphot < 6000) {
-      return [255, 255, 0]; // Estrella tipo Sol
-    } else if (teff_gspphot >= 6000 && teff_gspphot < 7500) {
-      return [255, 255, 255]; // Estrella caliente
-    } else {
-      return [0, 191, 255]; // Estrella muy caliente
-    }
-  }
 
   useEffect(() => {
     const loadStars = async () => {
@@ -79,8 +67,8 @@ const StarMap: React.FC = () => {
           const starCoordinates = raDecToCartesian(
             star[2],
             star[3],
-            star[23] * 30
-            // distance * 30
+            star[23] * 25
+            // distance * 25
           );
           const adjustedStarCoords = {
             x: starCoordinates.x - exoplanetCoordinates.x,
@@ -88,6 +76,8 @@ const StarMap: React.FC = () => {
             z: starCoordinates.z - exoplanetCoordinates.z,
             color: getStarColor(star[20]),
           };
+
+          // console.log(getStarColor(star[20]));
 
           return adjustedStarCoords;
         });
@@ -199,11 +189,26 @@ const StarMap: React.FC = () => {
     let myP5: p5;
     if (newStars.length > 0) {
       myP5 = new p5(sketch, sketchRef.current!);
+      setP5Instance(myP5);
+
       return () => {
         myP5.remove();
       };
     }
   }, [newStars]);
+
+  const handleSave = () => {
+    const p5Canvas = document.querySelector("canvas");
+    if (p5Canvas && p5Instance) {
+      // Usa la función p5.js saveCanvas para descargar la imagen
+
+      p5Instance.saveCanvas(
+        p5Canvas,
+        `${exoplanet.name.replace(" ", "-")}_space`,
+        "png"
+      );
+    }
+  };
 
   return (
     <div>
@@ -227,6 +232,45 @@ const StarMap: React.FC = () => {
           <p>{clickedStar.description}</p>
         </div>
       )} */}
+      <div
+        style={{
+          display: "flex",
+          position: "absolute",
+          bottom: 0,
+          left: 0,
+          flexDirection: "column",
+          gap: ".25em",
+        }}
+      >
+        {COLOR_SCALE.map((color) => (
+          <div style={{ display: "flex", alignItems: "center", gap: ".5em" }}>
+            <div
+              style={{
+                width: "2em",
+                height: ".85em",
+                background: `rgb(${color.color.r},${color.color.g},${color.color.b})`,
+              }}
+            />
+            <p style={{ fontSize: ".85em" }}>
+              {color.minTemp} K - {color.maxTemp} K
+            </p>
+          </div>
+        ))}
+      </div>
+      <div style={{ position: "absolute", top: "1em", right: "1em" }}>
+        <button
+          onClick={() => handleSave()}
+          style={{
+            padding: ".5em .75em",
+            fontSize: "1em",
+            cursor: "pointer",
+            borderRadius: "4px",
+            border: 0,
+          }}
+        >
+          Take screenshot
+        </button>
+      </div>
     </div>
   );
 };
