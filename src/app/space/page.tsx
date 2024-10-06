@@ -2,8 +2,8 @@
 import React, { useEffect, useRef, useState } from "react";
 import p5 from "p5";
 import { getStars } from "@/actions/getStars";
-import { raDecToCartesian } from "./utils/raDecToCartesian";
-import { calculateStarSize } from "./utils/calculateStarSize";
+import { raDecToCartesian } from "../utils/raDecToCartesian";
+import { calculateStarSize } from "../utils/calculateStarSize";
 import { useSearchParams } from "next/navigation";
 import { exoplanets } from "@/exoplanets";
 
