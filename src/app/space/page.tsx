@@ -251,7 +251,7 @@ const StarMap: React.FC = () => {
                 background: `rgb(${color.color.r},${color.color.g},${color.color.b})`,
               }}
             />
-            <p style={{ fontSize: ".85em" }}>
+            <p style={{ color: "white", fontSize: ".85em" }}>
               {color.minTemp} K - {color.maxTemp} K
             </p>
           </div>
@@ -266,6 +266,7 @@ const StarMap: React.FC = () => {
             cursor: "pointer",
             borderRadius: "4px",
             border: 0,
+            backgroundColor: "white",
           }}
         >
           Take screenshot
