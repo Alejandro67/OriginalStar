@@ -14,6 +14,8 @@ The local event is Cordoba - Argentina.
 
 Challenge name : Exosky!
 
+To run this project you need to clone the repository, install all dependencies with npm install, finally npm run dev. This will be running on port 3000
+
 # High level project summary
 
 For decades, astronomy studies mapped the universe with great detail. Thanks to space and ground telescopes, we have a big catalog of stars with precise information like location and brightness. However, most of the information is Earth centered. With the increase of exoplanets that were found, we now have the opportunity to visualize the sky/space from different points of view. 
