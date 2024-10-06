@@ -26,11 +26,12 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <ChakraProvider>
         <body className={`${geistSans.variable} ${geistMono.variable}`}>
-          {children}
-        </body>
-      </ChakraProvider>
+          <ChakraProvider>
+            {children}
+          </ChakraProvider>
+        </body> 
     </html>
+
   );
 }
