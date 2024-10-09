@@ -71,8 +71,6 @@ What tools, coding languages, hardware, or software did you use to develop your 
 
 We built the app using Next.js, a React-based framework for server-rendered applications, and TypeScript for type safety. For the user interface, we used Chakra UI, which allowed us to quickly style components and ensure responsiveness across different devices. The star data is processed from a catalog such as the ESA Gaia’s DR3 dataset, which contains billions of stars. From NASA exoplanet archive we took the 5 exoplanet info we use for the demo. For 3D rendering and visualization, we utilized p5.js, a JavaScript library for creating 3D graphics. We chose these tools to ensure the app is interactive, scalable, and efficient, even when processing large datasets.
 
-
-
 The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
 
 Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
