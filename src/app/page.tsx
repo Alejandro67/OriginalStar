@@ -12,19 +12,20 @@ import {
 import { exoplanets } from "../exoplanets";
 import Banner from "../../public/images/banner.jpg";
 import { useRouter } from "next/navigation";
+import Link from "next/link";
 
 export default function Home() {
   const router = useRouter();
-  const handleExpo = (name: string) => {
-    router.push(encodeURI(`/space?exoplanet=${name}`));
-  };
+  // const handleExpo = (name: string) => {
+  //   router.push(encodeURI(`/space?exoplanet=${name}`));
+  // };
 
   const handleRef = (info: string) => {
     window.open(info, "_blank");
   };
 
   return (
-    <Flex direction={"column"} bg={"#232427"} h="100vh">
+    <Flex direction={"column"} bg={"#232427"} minH="100vh">
       <Flex justify={"center"} pb={5} textAlign="center">
         <Box
           bgImage={Banner.src}
@@ -112,12 +113,9 @@ export default function Home() {
                     >
                       Info
                     </Button>
-                    <Button
-                      colorScheme="teal"
-                      onClick={() => handleExpo(planet.name)}
-                    >
-                      Expo
-                    </Button>
+                    <Link href={`/space?exoplanet=${planet.name}`}>
+                      <Button colorScheme="teal">Expo</Button>
+                    </Link>
                   </Flex>
                 </Box>
               </Box>
