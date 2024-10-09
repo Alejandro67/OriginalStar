@@ -1,3 +1,25 @@
+This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+
+## Getting Started
+
+First, run the development server:
+
+```bash
+npm run dev
+# or
+yarn dev
+# or
+pnpm dev
+# or
+bun dev
+```
+
+Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+
+You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+
+This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+
 # OriginalStar
 
 This project was created in the 2024 NASA Space Apps Challenge.
@@ -49,3 +71,6 @@ What tools, coding languages, hardware, or software did you use to develop your 
 
 We built the app using Next.js, a React-based framework for server-rendered applications, and TypeScript for type safety. For the user interface, we used Chakra UI, which allowed us to quickly style components and ensure responsiveness across different devices. The star data is processed from a catalog such as the ESA Gaia’s DR3 dataset, which contains billions of stars. From NASA exoplanet archive we took the 5 exoplanet info we use for the demo. For 3D rendering and visualization, we utilized p5.js, a JavaScript library for creating 3D graphics. We chose these tools to ensure the app is interactive, scalable, and efficient, even when processing large datasets.
 
+The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+
+Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
